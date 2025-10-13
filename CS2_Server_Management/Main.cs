@@ -129,6 +129,7 @@ namespace CS2_Server_Management
 
         private void bwInstallCS2Server_DoWork(object sender, DoWorkEventArgs e)
         {
+            // Get the BackgroundWorker object that raised this event
             var worker = sender as BackgroundWorker;
 
             // Install dependencies
