@@ -47,11 +47,12 @@
             this.btnAddServer = new System.Windows.Forms.Button();
             this.btnRemoveServer = new System.Windows.Forms.Button();
             this.gbxInstances = new System.Windows.Forms.GroupBox();
-            this.lsbIsntances = new System.Windows.Forms.ListBox();
-            this.btnAddInstance = new System.Windows.Forms.Button();
-            this.btnRemoveInstance = new System.Windows.Forms.Button();
-            this.btnStartInstance = new System.Windows.Forms.Button();
             this.btnStopInstance = new System.Windows.Forms.Button();
+            this.btnStartInstance = new System.Windows.Forms.Button();
+            this.btnRemoveInstance = new System.Windows.Forms.Button();
+            this.btnAddInstance = new System.Windows.Forms.Button();
+            this.lsbIsntances = new System.Windows.Forms.ListBox();
+            this.bwStartInstance = new System.ComponentModel.BackgroundWorker();
             this.gbxServerControl.SuspendLayout();
             this.gbxInstances.SuspendLayout();
             this.SuspendLayout();
@@ -243,33 +244,15 @@
             this.gbxInstances.TabStop = false;
             this.gbxInstances.Text = "Instances control";
             // 
-            // lsbIsntances
+            // btnStopInstance
             // 
-            this.lsbIsntances.FormattingEnabled = true;
-            this.lsbIsntances.Location = new System.Drawing.Point(7, 20);
-            this.lsbIsntances.Name = "lsbIsntances";
-            this.lsbIsntances.Size = new System.Drawing.Size(142, 251);
-            this.lsbIsntances.TabIndex = 0;
-            // 
-            // btnAddInstance
-            // 
-            this.btnAddInstance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddInstance.Location = new System.Drawing.Point(7, 274);
-            this.btnAddInstance.Name = "btnAddInstance";
-            this.btnAddInstance.Size = new System.Drawing.Size(63, 21);
-            this.btnAddInstance.TabIndex = 14;
-            this.btnAddInstance.Text = "+";
-            this.btnAddInstance.UseVisualStyleBackColor = true;
-            // 
-            // btnRemoveInstance
-            // 
-            this.btnRemoveInstance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRemoveInstance.Location = new System.Drawing.Point(86, 274);
-            this.btnRemoveInstance.Name = "btnRemoveInstance";
-            this.btnRemoveInstance.Size = new System.Drawing.Size(63, 21);
-            this.btnRemoveInstance.TabIndex = 15;
-            this.btnRemoveInstance.Text = "-";
-            this.btnRemoveInstance.UseVisualStyleBackColor = true;
+            this.btnStopInstance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStopInstance.Location = new System.Drawing.Point(186, 49);
+            this.btnStopInstance.Name = "btnStopInstance";
+            this.btnStopInstance.Size = new System.Drawing.Size(144, 23);
+            this.btnStopInstance.TabIndex = 16;
+            this.btnStopInstance.Text = "Stop";
+            this.btnStopInstance.UseVisualStyleBackColor = true;
             // 
             // btnStartInstance
             // 
@@ -282,15 +265,39 @@
             this.btnStartInstance.UseVisualStyleBackColor = true;
             this.btnStartInstance.Click += new System.EventHandler(this.btnStartInstance_Click);
             // 
-            // btnStopInstance
+            // btnRemoveInstance
             // 
-            this.btnStopInstance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStopInstance.Location = new System.Drawing.Point(186, 49);
-            this.btnStopInstance.Name = "btnStopInstance";
-            this.btnStopInstance.Size = new System.Drawing.Size(144, 23);
-            this.btnStopInstance.TabIndex = 16;
-            this.btnStopInstance.Text = "Stop";
-            this.btnStopInstance.UseVisualStyleBackColor = true;
+            this.btnRemoveInstance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemoveInstance.Location = new System.Drawing.Point(86, 274);
+            this.btnRemoveInstance.Name = "btnRemoveInstance";
+            this.btnRemoveInstance.Size = new System.Drawing.Size(63, 21);
+            this.btnRemoveInstance.TabIndex = 15;
+            this.btnRemoveInstance.Text = "-";
+            this.btnRemoveInstance.UseVisualStyleBackColor = true;
+            // 
+            // btnAddInstance
+            // 
+            this.btnAddInstance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddInstance.Location = new System.Drawing.Point(7, 274);
+            this.btnAddInstance.Name = "btnAddInstance";
+            this.btnAddInstance.Size = new System.Drawing.Size(63, 21);
+            this.btnAddInstance.TabIndex = 14;
+            this.btnAddInstance.Text = "+";
+            this.btnAddInstance.UseVisualStyleBackColor = true;
+            // 
+            // lsbIsntances
+            // 
+            this.lsbIsntances.FormattingEnabled = true;
+            this.lsbIsntances.Location = new System.Drawing.Point(7, 20);
+            this.lsbIsntances.Name = "lsbIsntances";
+            this.lsbIsntances.Size = new System.Drawing.Size(142, 251);
+            this.lsbIsntances.TabIndex = 0;
+            // 
+            // bwStartInstance
+            // 
+            this.bwStartInstance.WorkerReportsProgress = true;
+            this.bwStartInstance.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwStartInstance_DoWork);
+            this.bwStartInstance.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwStartInstance_ProgressChanged);
             // 
             // Main
             // 
@@ -341,6 +348,7 @@
         private System.Windows.Forms.Button btnRemoveInstance;
         private System.Windows.Forms.Button btnAddInstance;
         private System.Windows.Forms.ListBox lsbIsntances;
+        private System.ComponentModel.BackgroundWorker bwStartInstance;
     }
 }
 

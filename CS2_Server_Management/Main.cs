@@ -110,7 +110,8 @@ namespace CS2_Server_Management
 
         private void bwUpdateServer_DoWork(object sender, DoWorkEventArgs e)
         {
-            this.Invoke((MethodInvoker)delegate {
+            this.Invoke((MethodInvoker)delegate
+            {
                 lblStatus.Text = "Server update in progress...";
 
                 AppendToConsole(sshClientConn.SendSudoCommand("apt update"));
@@ -143,7 +144,8 @@ namespace CS2_Server_Management
             worker.ReportProgress(0, sshClientConn.SendCommand("./steamcmd.sh +login anonymous +app_update 730 validate +quit"));
 
             //  Create link to fix steamclient.so issue
-            worker.ReportProgress(0, sshClientConn.SendSudoCommand("ln -s /home/cs2/linux64/steamclient.so /home/cs2/.steam/sdk64/steamclient.so"));
+            worker.ReportProgress(0, sshClientConn.SendCommand("mkdir -p /home/cs2/.steam/sdk64/"));
+            worker.ReportProgress(0, sshClientConn.SendCommand("ln -s /home/cs2/linux64/steamclient.so /home/cs2/.steam/sdk64/steamclient.so"));
         }
 
         private void bwInstallCS2Server_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -157,7 +159,8 @@ namespace CS2_Server_Management
 
         private void bwInstallCS2Server_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.Invoke((MethodInvoker)delegate {
+            this.Invoke((MethodInvoker)delegate
+            {
                 lblStatus.Text = "CS2 server installation completed.";
             });
         }
@@ -220,7 +223,27 @@ namespace CS2_Server_Management
 
         private void btnStartInstance_Click(object sender, EventArgs e)
         {
-            AppendToConsole(sshClientConn.SendCommand("LD_LIBRARY_PATH=\"/home/cs2/Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/bin/linuxsteamrt64\":$LD_LIBRARY_PATH /home/cs2/Steam/steamapps/common/'Counter-Strike Global Offensive'/game/bin/linuxsteamrt64/cs2 -dedicated -usercon -maxplayers 16 -port 27015 +tv_port 27020 -ip 192.168.1.118 +map de_anubis +game_mode 1 +game_type 0 +hostname \"Test server\""));
+            bwStartInstance.RunWorkerAsync();
+        }
+        private void bwStartInstance_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // Get the BackgroundWorker object that raised this event
+            var worker = sender as BackgroundWorker;
+
+            worker.ReportProgress(0, sshClientConn.SendCommand("mkdir -p /home/cs2/.steam/sdk64/"));
+            worker.ReportProgress(0, sshClientConn.SendCommand("ln -s /home/cs2/linux64/steamclient.so /home/cs2/.steam/sdk64/steamclient.so"));
+
+            // Start CS2 server instance
+            worker.ReportProgress(0, sshClientConn.SendCommand("LD_LIBRARY_PATH=\"/home/cs2/Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/bin/linuxsteamrt64\":$LD_LIBRARY_PATH /home/cs2/Steam/steamapps/common/'Counter-Strike Global Offensive'/game/bin/linuxsteamrt64/cs2 -dedicated -usercon -maxplayers 16 -port 27015 +tv_port 27020 -ip 192.168.1.118 +map de_anubis +game_mode 1 +game_type 0 +hostname \"Test server\""));
+        }
+
+        private void bwStartInstance_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            string output = e.UserState as string;
+            if (!string.IsNullOrEmpty(output))
+            {
+                AppendToConsole(output);
+            }
         }
     }
 }
