@@ -42,6 +42,10 @@
             this.lblCs2ServerInstalled = new System.Windows.Forms.Label();
             this.lblCs2ServerInstalledTitle = new System.Windows.Forms.Label();
             this.gbxCSServerControl = new System.Windows.Forms.GroupBox();
+            this.lblMatchZyStatus = new System.Windows.Forms.Label();
+            this.btnInstallMatchzy = new System.Windows.Forms.Button();
+            this.lblCsSStatus = new System.Windows.Forms.Label();
+            this.lblMetamodStatus = new System.Windows.Forms.Label();
             this.btnInstallCSSharp = new System.Windows.Forms.Button();
             this.btnInstallMetamod = new System.Windows.Forms.Button();
             this.btnAddServer = new System.Windows.Forms.Button();
@@ -61,12 +65,8 @@
             this.tbxConsoleServer = new System.Windows.Forms.RichTextBox();
             this.tcMain = new System.Windows.Forms.TabControl();
             this.bwCheckCs2ServerInstalled = new System.ComponentModel.BackgroundWorker();
-            this.bwCs2InstallMetamod = new System.ComponentModel.BackgroundWorker();
+            this.bwCopyFiles = new System.ComponentModel.BackgroundWorker();
             this.bwCs2InstallCsSharp = new System.ComponentModel.BackgroundWorker();
-            this.lblMetamodStatus = new System.Windows.Forms.Label();
-            this.lblCsSStatus = new System.Windows.Forms.Label();
-            this.btnInstallMatchzy = new System.Windows.Forms.Button();
-            this.lblMatchZyStatus = new System.Windows.Forms.Label();
             this.gbxInstances.SuspendLayout();
             this.tpInstances.SuspendLayout();
             this.tpServers.SuspendLayout();
@@ -220,6 +220,49 @@
             this.gbxCSServerControl.TabIndex = 17;
             this.gbxCSServerControl.TabStop = false;
             this.gbxCSServerControl.Text = "CS Server control";
+            // 
+            // lblMatchZyStatus
+            // 
+            this.lblMatchZyStatus.AutoSize = true;
+            this.lblMatchZyStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMatchZyStatus.ForeColor = System.Drawing.Color.Red;
+            this.lblMatchZyStatus.Location = new System.Drawing.Point(194, 114);
+            this.lblMatchZyStatus.Name = "lblMatchZyStatus";
+            this.lblMatchZyStatus.Size = new System.Drawing.Size(78, 13);
+            this.lblMatchZyStatus.TabIndex = 27;
+            this.lblMatchZyStatus.Text = "Not installed";
+            // 
+            // btnInstallMatchzy
+            // 
+            this.btnInstallMatchzy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInstallMatchzy.Location = new System.Drawing.Point(16, 109);
+            this.btnInstallMatchzy.Name = "btnInstallMatchzy";
+            this.btnInstallMatchzy.Size = new System.Drawing.Size(144, 23);
+            this.btnInstallMatchzy.TabIndex = 26;
+            this.btnInstallMatchzy.Text = "Install MatchZy";
+            this.btnInstallMatchzy.UseVisualStyleBackColor = true;
+            // 
+            // lblCsSStatus
+            // 
+            this.lblCsSStatus.AutoSize = true;
+            this.lblCsSStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCsSStatus.ForeColor = System.Drawing.Color.Green;
+            this.lblCsSStatus.Location = new System.Drawing.Point(194, 73);
+            this.lblCsSStatus.Name = "lblCsSStatus";
+            this.lblCsSStatus.Size = new System.Drawing.Size(55, 13);
+            this.lblCsSStatus.TabIndex = 25;
+            this.lblCsSStatus.Text = "Installed";
+            // 
+            // lblMetamodStatus
+            // 
+            this.lblMetamodStatus.AutoSize = true;
+            this.lblMetamodStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMetamodStatus.ForeColor = System.Drawing.Color.Green;
+            this.lblMetamodStatus.Location = new System.Drawing.Point(194, 33);
+            this.lblMetamodStatus.Name = "lblMetamodStatus";
+            this.lblMetamodStatus.Size = new System.Drawing.Size(55, 13);
+            this.lblMetamodStatus.TabIndex = 24;
+            this.lblMetamodStatus.Text = "Installed";
             // 
             // btnInstallCSSharp
             // 
@@ -415,12 +458,12 @@
             this.bwCheckCs2ServerInstalled.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckCS2ServerInstalled_DoWork);
             this.bwCheckCs2ServerInstalled.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckCS2ServerInstalled_RunWorkerCompleted);
             // 
-            // bwCs2InstallMetamod
+            // bwCopyFiles
             // 
-            this.bwCs2InstallMetamod.WorkerReportsProgress = true;
-            this.bwCs2InstallMetamod.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCS2InstallMetamod_DoWork);
-            this.bwCs2InstallMetamod.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwCS2InstallMetamod_ProgressChanged);
-            this.bwCs2InstallMetamod.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCS2InstallMetamod_RunWorkerCompleted);
+            this.bwCopyFiles.WorkerReportsProgress = true;
+            this.bwCopyFiles.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCopyFiles_DoWork);
+            this.bwCopyFiles.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwCopyFiles_ProgressChanged);
+            this.bwCopyFiles.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCopyFiles_RunWorkerCompleted);
             // 
             // bwCs2InstallCsSharp
             // 
@@ -428,49 +471,6 @@
             this.bwCs2InstallCsSharp.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCs2InstallCsSharp_DoWork);
             this.bwCs2InstallCsSharp.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwCs2InstallCsSharp_ProgressChanged);
             this.bwCs2InstallCsSharp.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCs2InstallCsSharp_RunWorkerCompleted);
-            // 
-            // lblMetamodStatus
-            // 
-            this.lblMetamodStatus.AutoSize = true;
-            this.lblMetamodStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMetamodStatus.ForeColor = System.Drawing.Color.Green;
-            this.lblMetamodStatus.Location = new System.Drawing.Point(194, 33);
-            this.lblMetamodStatus.Name = "lblMetamodStatus";
-            this.lblMetamodStatus.Size = new System.Drawing.Size(54, 13);
-            this.lblMetamodStatus.TabIndex = 24;
-            this.lblMetamodStatus.Text = "Running";
-            // 
-            // lblCsSStatus
-            // 
-            this.lblCsSStatus.AutoSize = true;
-            this.lblCsSStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCsSStatus.ForeColor = System.Drawing.Color.Green;
-            this.lblCsSStatus.Location = new System.Drawing.Point(194, 73);
-            this.lblCsSStatus.Name = "lblCsSStatus";
-            this.lblCsSStatus.Size = new System.Drawing.Size(54, 13);
-            this.lblCsSStatus.TabIndex = 25;
-            this.lblCsSStatus.Text = "Running";
-            // 
-            // btnInstallMatchzy
-            // 
-            this.btnInstallMatchzy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInstallMatchzy.Location = new System.Drawing.Point(16, 109);
-            this.btnInstallMatchzy.Name = "btnInstallMatchzy";
-            this.btnInstallMatchzy.Size = new System.Drawing.Size(144, 23);
-            this.btnInstallMatchzy.TabIndex = 26;
-            this.btnInstallMatchzy.Text = "Install MatchZy";
-            this.btnInstallMatchzy.UseVisualStyleBackColor = true;
-            // 
-            // lblMatchZyStatus
-            // 
-            this.lblMatchZyStatus.AutoSize = true;
-            this.lblMatchZyStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMatchZyStatus.ForeColor = System.Drawing.Color.Red;
-            this.lblMatchZyStatus.Location = new System.Drawing.Point(194, 114);
-            this.lblMatchZyStatus.Name = "lblMatchZyStatus";
-            this.lblMatchZyStatus.Size = new System.Drawing.Size(78, 13);
-            this.lblMatchZyStatus.TabIndex = 27;
-            this.lblMatchZyStatus.Text = "Not installed";
             // 
             // Main
             // 
@@ -522,7 +522,7 @@
         private System.ComponentModel.BackgroundWorker bwCheckCs2ServerInstalled;
         private System.Windows.Forms.Button btnInstallCSSharp;
         private System.Windows.Forms.Button btnInstallMetamod;
-        private System.ComponentModel.BackgroundWorker bwCs2InstallMetamod;
+        private System.ComponentModel.BackgroundWorker bwCopyFiles;
         private System.Windows.Forms.Label lblCs2ServerInstalled;
         private System.Windows.Forms.Label lblCs2ServerInstalledTitle;
         private System.Windows.Forms.Label lblServerStatusConnectionTitle;

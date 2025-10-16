@@ -145,6 +145,8 @@ namespace CS2_Server_Management
             //  Create link to fix steamclient.so issue
             worker.ReportProgress(90, sshClientConn.SendCommand("mkdir -p /home/cs2/.steam/sdk64/"));
             worker.ReportProgress(95, sshClientConn.SendSudoCommand("ln -s /home/cs2/linux64/steamclient.so /home/cs2/.steam/sdk64/steamclient.so"));
+
+            // Copy config files
         }
 
         private void bwInstallCS2Server_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -275,15 +277,29 @@ namespace CS2_Server_Management
         {
             lblInfo.Text = "Installing Metamod on CS2 Server ...";
 
-            bwCs2InstallMetamod.RunWorkerAsync();
+            bwCopyFiles.RunWorkerAsync("metamod");
         }
 
-        private void bwCS2InstallMetamod_DoWork(object sender, DoWorkEventArgs e)
+        private void bwCopyFiles_DoWork(object sender, DoWorkEventArgs e)
         {
             var worker = sender as BackgroundWorker;
 
-            string localMetamodPath = @".\resources\metamod";
-            string remoteMetamodPath = "/home/cs2/Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/";
+            string localPath = "";
+            string remotePath = "";
+
+            switch (e.Argument as string)
+            {
+                case "metamod":
+                        localPath = @".\resources\metamod";
+                        remotePath = "/home/cs2/Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/";
+                    break;
+                case "cssharp":
+                        localPath = @".\resources\counterstrikesharp";
+                        remotePath = "/home/cs2/Steam/steamapps/common/Counter-Strike Global Offensive/game/csgo/";
+                    break;
+                default:
+                    break;
+            }
 
             worker.ReportProgress(0, "Installing Metamod on CS2 Server");
 
@@ -291,11 +307,11 @@ namespace CS2_Server_Management
             using (var sftp = new SftpClient(sshClientConn.Ip, sshClientConn.Username, sshClientConn.Password))
             {
                 sftp.Connect();
-                foreach (var file in Directory.GetFiles(localMetamodPath, "*", SearchOption.AllDirectories))
+                foreach (var file in Directory.GetFiles(localPath, "*", SearchOption.AllDirectories))
                 {
                     // Compute the relative path and construct the remote file path
-                    string relativePath = file.Substring(localMetamodPath.Length).TrimStart('\\', '/');
-                    string remoteFilePath = remoteMetamodPath + relativePath.Replace("\\", "/");
+                    string relativePath = file.Substring(localPath.Length).TrimStart('\\', '/');
+                    string remoteFilePath = remotePath + relativePath.Replace("\\", "/");
 
                     // Create remote directory if it doesn't exist
                     string remoteDir = Path.GetDirectoryName(remoteFilePath).Replace("\\","/");
@@ -310,7 +326,7 @@ namespace CS2_Server_Management
             }
         }
 
-        private void bwCS2InstallMetamod_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void bwCopyFiles_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             string output = e.UserState as string;
             if (!string.IsNullOrEmpty(output))
@@ -319,10 +335,10 @@ namespace CS2_Server_Management
             }
         }
 
-        private void bwCS2InstallMetamod_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void bwCopyFiles_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.Invoke((MethodInvoker)delegate {
-                lblInfo.Text = "Metamod successfully installed on CS2 Server.";
+                lblInfo.Text = "Files successfully installed on CS2 Server.";
             });
         }
 
